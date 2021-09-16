@@ -38,6 +38,7 @@ class Api::V1::ArticlesController < ApplicationController
   #DELETE
   def destroy
     @article.destroy
+    render json: {message: "DELETE Done!"}
   end
 
   private
@@ -46,10 +47,10 @@ class Api::V1::ArticlesController < ApplicationController
   end
 
   def article_params
-    parmas.requir(:article).permit([
+    params.require(:article).permit(
       :title,
       :author,
       :description
-    ])
+    )
   end
 end
