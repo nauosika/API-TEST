@@ -1,12 +1,12 @@
 class Api::V1::AuthController < ApplicationController
-  before_action :authenticate_user!, :only => [:logout]
+  before_action :authenticate_user!, only: [:logout]
   def signup
-    user = User.new( :email => params[:email], :password => params[:password] )
+    user = User.new( email: params[:email], password: params[:password] )
 
     if user.save
-      render :json => { :user_id => user.id }
+      render json: { user_id: user.id, email: user.email}, status: 200
     else
-      render :json => { :message => "Failed", :errors => user.errors }, :status => 400
+      render json: { message: "Signup Failed", errors: user.errors }, status: 400
     end
   end
 
@@ -16,19 +16,20 @@ class Api::V1::AuthController < ApplicationController
     end
 
     if user && user.valid_password?( params[:password] )
-    render :json => { :message => "Ok",
-                      :auth_token => user.authentication_token,
-                      :user_id => user.id }
+      render json: { message: "Login!",
+                     auth_token: user.authentication_token,
+                     user_id: user.id }, status: 200
     else
-      render :json => { :message => "Email or Password is wrong" }, :status => 401
+      render json: { message: "Email or Password wrong" }, status: 401
     end
   end
 
   def logout
-    current_user.generate_authentication_token # 重新產生一組，本來的 token 就失效了
+    # 設計使用戶重新登入時，authentication_token會換。
+    current_user.generate_authentication_token
     current_user.save!
 
-    render :json => { :message => "Ok"}
+    render json: { message: "See you!"}
   end
 
 end
