@@ -1,9 +1,9 @@
 class Api::V1::ArticlesController < ApplicationController
   before_action :find_article, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   #GET
   def index
-    @articles = Article.all
+    @articles = current_user.articles
     render json:@articles, status: 200
   end
 
@@ -18,7 +18,7 @@ class Api::V1::ArticlesController < ApplicationController
 
   #PUT/POST
   def create
-    @article = Article.new(article_params)
+    @article = current_user.articles.new(article_params)
       if @article.save
         render json: @article, status: 200
       else
@@ -43,7 +43,7 @@ class Api::V1::ArticlesController < ApplicationController
 
   private
   def find_article
-    @article = Article.find(params[:id])
+    @article = current_user.articles.find(params[:id])
   end
 
   def article_params
