@@ -9,5 +9,6 @@
   Article.create(
     title: Faker::Artist.name,
     author: Faker::FunnyName.name,
-    description: Faker::Lorem.sentences)
+    description: Faker::Lorem.sentences,
+    user_id: 1)
 end
